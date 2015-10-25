@@ -37,6 +37,7 @@ public:
 	}
 
 	void readFromFile(std::string name);
+	void readMatrixFromFile(std::string name);
 	double getTotalDistance(std::vector<int> order);
 };
 

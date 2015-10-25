@@ -7,7 +7,8 @@
 
 Matrix::Matrix(std::string name)
 {
-	readFromFile(name);
+	//readFromFile(name);
+	readMatrixFromFile(name);
 }
 	
 
@@ -28,9 +29,9 @@ void Matrix::cleanMatrix()
 
 void Matrix::printMatrix()
 {
-	for (int i = 0; i < getEdges(); i++)
+	for (int i = 0; i < getVerticles(); i++)
 	{
-		for (int j = 0; j < getEdges(); j++)
+		for (int j = 0; j < getVerticles(); j++)
 		{
 			std::cout << M[i][j] << ' ';
 		}
@@ -48,7 +49,7 @@ void Matrix::readFromFile(std::string name)
 	}
 	fin >> verticles;
 	std::cout << verticles;
-	setEdges( ((getVerticles() * (getVerticles() - 1)) / 2));
+	edges = ((getVerticles() * (getVerticles() - 1)) / 2);
 
 	M = new int*[getVerticles()];
 	for (int i = 0; i < getVerticles(); i++)
@@ -70,6 +71,35 @@ void Matrix::readFromFile(std::string name)
 	printMatrix();
 }
 
+void Matrix::readMatrixFromFile(std::string name)
+{
+	//otworz plik
+	std::ifstream fin;
+	fin.open(name.c_str());
+	if (!fin.is_open()) {
+		throw "Brak pliku z danymi";
+	}
+	fin >> verticles;
+	std::cout << verticles;
+	edges = ((getVerticles() * (getVerticles() - 1)) / 2);
+
+	M = new int*[getVerticles()];
+	for (int i = 0; i < getVerticles(); i++)
+		M[i] = new int[getVerticles()];
+
+	cleanMatrix();
+
+	for (int i = 0; i < getVerticles(); i++)
+	{
+		for (int j = 0; j < getVerticles(); j++)
+		{
+			fin >> M[i][j];
+		}
+	}
+	fin.close();
+
+	printMatrix();
+}
 double Matrix::getTotalDistance(std::vector<int> order)
 {
 	double sum = 0;;
@@ -77,6 +107,6 @@ double Matrix::getTotalDistance(std::vector<int> order)
 	{
 		sum += M[order[i]][order[i + 1]];
 	}
-	sum += M[order[0]][order[order.size()]];
+	sum += M[order[0]][order[order.size()-1]];
 	return sum;
 }
