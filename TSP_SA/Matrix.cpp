@@ -11,6 +11,27 @@ Matrix::Matrix(std::string name)
 	readMatrixFromFile(name);
 }
 	
+Matrix::Matrix(int verticles)
+{
+	this->verticles = verticles;
+	edges = ((getVerticles() * (getVerticles() - 1)) / 2);
+	
+	M = new int*[getVerticles()];
+	for (int i = 0; i < getVerticles(); i++)
+		M[i] = new int[getVerticles()];
+
+	cleanMatrix();
+
+	for (int i = 0; i < getVerticles(); i++)
+	{
+		for (int j = 0; j < getVerticles(); j++)
+		{
+			M[i][j] = rand() % 100;
+		}
+	}
+}
+
+
 
 Matrix::~Matrix()
 {

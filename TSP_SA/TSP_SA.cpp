@@ -8,16 +8,22 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 
+void StartCounter();
+double GetCounter();
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+using namespace std;
 
 double anneal(Matrix & matrix)//wy¿arzaj 
 {
 	int iteration = -1;
-	std::vector<int> actualOrder(matrix.getVerticles());
+	vector<int> actualOrder(matrix.getVerticles());
 	double temperature = 10000.0;
 	double deltaDistance = 0;
 	double coolingRate = 0.9999;
-	double absoluteTemperature = 0.00001;
+	double absoluteTemperature = 0.001;
 	double shortestDistance;
 	int lastSwaped =  0;
 	
@@ -25,12 +31,12 @@ double anneal(Matrix & matrix)//wy¿arzaj
 		actualOrder[i] = i;
 
 	double distance = matrix.getTotalDistance(actualOrder);
-	std::ofstream fout("wynik.txt");
+	ofstream fout("wynik.txt");
 
 	while (temperature > absoluteTemperature && lastSwaped<1000)
 	{	
 
-		std::vector<int> nextOrder(actualOrder);
+		vector<int> nextOrder(actualOrder);
 
 
 		//losowanie zamiany
@@ -73,19 +79,39 @@ double anneal(Matrix & matrix)//wy¿arzaj
 	fout.close();
 	return distance;
 }
+void StartCounter() {
+	LARGE_INTEGER li;
+	if (!QueryPerformanceFrequency(&li))
+		cout << "QueryPerformanceFrequency failed!\n";
 
+	PCFreq = double(li.QuadPart) / 1000.0;
+
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double GetCounter() {
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	return double(li.QuadPart - CounterStart) / PCFreq;
+}
 int main()
 {
-	
-	srand(time(0));
+	double counter = 0;//double partialCounter;
+	srand(time(NULL));
 	//Matrix M("daneTSP.txt");
-	Matrix M("macierzTSP.txt");//odp to 2085
+	//Matrix M("macierzTSP.txt");//odp to 2085
+	for (auto i = 50; i < 100;i++)
+	{
+//		Matrix M(i);
+//		StartCounter();
+//		anneal(M);
+//		counter = GetCounter();
+		cout <<"wierzcholki "<<i+"  czas "<< counter<<endl;
+	}
 	
-	
-
-	std::cout<<anneal(M);
 	int a;
-	std::cin >> a;
+	cin >> a;
     return 0;
 }
 

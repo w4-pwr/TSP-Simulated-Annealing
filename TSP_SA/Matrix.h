@@ -12,6 +12,7 @@ public:
 	int **M;
 	Matrix();
 	Matrix(std::string name);
+	Matrix(int verticles);
 	~Matrix();
 	void cleanMatrix();
 	void printMatrix();
